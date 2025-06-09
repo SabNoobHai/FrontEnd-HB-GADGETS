@@ -8,12 +8,12 @@ const SchPost = () => {
   const [message, setMessage] = useState('');
   const [scheduledTime, setScheduledTime] = useState('');
   const [mediaFile, setMediaFile] = useState(null);
-  const [mediaType, setMediaType] = useState('photo'); // photo or video
+  const [mediaType, setMediaType] = useState('photo');
 
   const handleFacebookLogin = () => {
     const appId = '24700456586221475';
     const redirectUri = 'http://localhost:5173/schedulePost';
-    const scopes = 'pages_show_list,pages_read_engagement,pages_manage_posts,pages_read_user_content';
+    const scopes = 'pages_show_list,pages_read_engagement,pages_manage_posts';
 
     window.location.href =
       `https://www.facebook.com/v18.0/dialog/oauth?client_id=${appId}&redirect_uri=${redirectUri}&scope=${scopes}&response_type=token`;
@@ -82,77 +82,156 @@ const SchPost = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+    <div style={{
+      minHeight: '100vh',
+      backgroundColor: '#f3f6f9',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: '20px'
+    }}>
       {!accessToken ? (
         <button
           onClick={handleFacebookLogin}
-          className="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition"
+          style={{
+            padding: '12px 24px',
+            backgroundColor: '#1877F2',
+            color: 'white',
+            borderRadius: '8px',
+            fontSize: '16px',
+            fontWeight: 'bold',
+            border: 'none',
+            cursor: 'pointer'
+          }}
         >
           Login with Facebook
         </button>
       ) : (
-        <div className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-lg">
-          <h2 className="text-2xl font-bold mb-6 text-gray-800">Schedule a Facebook Post</h2>
+        <div style={{
+          backgroundColor: 'white',
+          padding: '30px',
+          borderRadius: '12px',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+          maxWidth: '600px',
+          width: '100%'
+        }}>
+          {/* Title Section */}
+          <div style={{ marginBottom: '24px', borderBottom: '1px solid #ddd', paddingBottom: '12px' }}>
+            <h2 style={{
+              fontSize: '24px',
+              fontWeight: 'bold',
+              color: '#333',
+              textAlign: 'center'
+            }}>
+              Schedule a Facebook Post
+            </h2>
+          </div>
 
-          <label className="block mb-2 text-sm font-medium text-gray-700">Select Page</label>
-          <select
-            onChange={e => setSelectedPage(e.target.value)}
-            value={selectedPage}
-            className="w-full mb-4 border border-gray-300 rounded-lg p-2"
-          >
-            <option value="">-- Choose a Page --</option>
-            {pages.map(page => (
-              <option key={page.id} value={page.id}>{page.name}</option>
-            ))}
-          </select>
-
-          <label className="block mb-2 text-sm font-medium text-gray-700">Message / Caption</label>
-          <textarea
-            value={message}
-            onChange={e => setMessage(e.target.value)}
-            className="w-full mb-4 border rounded-lg p-2 h-24"
-            placeholder="Write your post message or caption..."
-          />
-
-          <label className="block mb-2 text-sm font-medium text-gray-700">Media Type</label>
-          <select
-            value={mediaType}
-            onChange={e => setMediaType(e.target.value)}
-            className="w-full mb-4 border rounded-lg p-2"
-          >
-            <option value="photo">Photo</option>
-            <option value="video">Video</option>
-          </select>
-
-          <label className="block mb-2 text-sm font-medium text-gray-700">Upload Media</label>
-          <input
-            type="file"
-            accept={mediaType === 'photo' ? 'image/*' : 'video/*'}
-            onChange={e => setMediaFile(e.target.files[0])}
-            className="w-full mb-6"
-          />
-
-          <label className="block mb-2 text-sm font-medium text-gray-700">Schedule Time (for scheduling only)</label>
-          <input
-            type="datetime-local"
-            value={scheduledTime}
-            onChange={e => setScheduledTime(e.target.value)}
-            className="w-full mb-6 border rounded-lg p-2"
-          />
-
-          <div className="flex flex-col sm:flex-row gap-4">
-            <button
-              onClick={handleSchedulePost}
-              className="flex-1 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition font-semibold"
+          {/* Form Section */}
+          <div>
+            <label style={{ fontWeight: '600', color: '#555' }}>Select Page</label>
+            <select
+              value={selectedPage}
+              onChange={e => setSelectedPage(e.target.value)}
+              style={{
+                width: '100%',
+                padding: '8px',
+                marginBottom: '16px',
+                borderRadius: '6px',
+                border: '1px solid #ccc'
+              }}
             >
-              Schedule Later
-            </button>
-            <button
-              onClick={handlePostNow}
-              className="flex-1 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition font-semibold"
+              <option value="">-- Choose a Page --</option>
+              {pages.map(page => (
+                <option key={page.id} value={page.id}>{page.name}</option>
+              ))}
+            </select>
+
+            <label style={{ fontWeight: '600', color: '#555' }}>Message / Caption</label>
+            <textarea
+              value={message}
+              onChange={e => setMessage(e.target.value)}
+              placeholder="Write your message..."
+              style={{
+                width: '100%',
+                height: '80px',
+                padding: '8px',
+                marginBottom: '16px',
+                borderRadius: '6px',
+                border: '1px solid #ccc'
+              }}
+            />
+
+            <label style={{ fontWeight: '600', color: '#555' }}>Media Type</label>
+            <select
+              value={mediaType}
+              onChange={e => setMediaType(e.target.value)}
+              style={{
+                width: '100%',
+                padding: '8px',
+                marginBottom: '16px',
+                borderRadius: '6px',
+                border: '1px solid #ccc'
+              }}
             >
-              Post Now
-            </button>
+              <option value="photo">Photo</option>
+              <option value="video">Video</option>
+            </select>
+
+            <label style={{ fontWeight: '600', color: '#555' }}>Upload Media</label>
+            <input
+              type="file"
+              accept={mediaType === 'photo' ? 'image/*' : 'video/*'}
+              onChange={e => setMediaFile(e.target.files[0])}
+              style={{ marginBottom: '16px' }}
+            />
+
+            <label style={{ fontWeight: '600', color: '#555' }}>Schedule Time</label>
+            <input
+              type="datetime-local"
+              value={scheduledTime}
+              onChange={e => setScheduledTime(e.target.value)}
+              style={{
+                width: '100%',
+                padding: '8px',
+                marginBottom: '20px',
+                borderRadius: '6px',
+                border: '1px solid #ccc'
+              }}
+            />
+
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button
+                onClick={handleSchedulePost}
+                style={{
+                  flex: 1,
+                  backgroundColor: '#10B981',
+                  color: 'white',
+                  padding: '10px',
+                  borderRadius: '8px',
+                  fontWeight: '600',
+                  border: 'none',
+                  cursor: 'pointer'
+                }}
+              >
+                Schedule Later
+              </button>
+              <button
+                onClick={handlePostNow}
+                style={{
+                  flex: 1,
+                  backgroundColor: '#6366F1',
+                  color: 'white',
+                  padding: '10px',
+                  borderRadius: '8px',
+                  fontWeight: '600',
+                  border: 'none',
+                  cursor: 'pointer'
+                }}
+              >
+                Post Now
+              </button>
+            </div>
           </div>
         </div>
       )}
